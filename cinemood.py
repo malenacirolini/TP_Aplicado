@@ -122,11 +122,20 @@ def filtrar(df, estado, anio_desde, anio_hasta):
 # ──────────────────────────────────────────────────────────
 # PASO 6: Calcular el % de match de cada película
 # ──────────────────────────────────────────────────────────
-def calcular_match(df_f):
+def calcular_match(df_f, estado):
     df_f = df_f.copy()
-    df_f["match"] = (df_f["rating"] / 10 * 100).round(1)  # simple: rating sobre 10
-    return df_f.sort_values("match", ascending=False).head(10)
+    generos = ESTADOS[estado]
 
+    # 80% del match viene del rating de TMDb
+    df_f["match"] = (df_f["rating"] / 10 * 100) * 0.8
+
+    # 20% extra si la película tiene el género principal del estado emocional
+    df_f["match"] += df_f["generos"].apply(
+        lambda g: 20 if generos[0].lower() in str(g).lower() else 0
+    )
+
+    df_f["match"] = df_f["match"].round(1)
+    return df_f.sort_values("match", ascending=False).head(10)
 
 # ──────────────────────────────────────────────────────────
 # PASO 7: Mostrar el ranking en pantalla
@@ -237,7 +246,7 @@ def main():
         if df_filtrado.empty:
             print("  No encontramos películas para ese perfil. Probá con otros valores.")
         else:
-            df_ranking = calcular_match(df_filtrado)
+            df_ranking = calcular_match(df_filtrado, estado)
 
             mostrar_colaborativo(estado, rango)
             mostrar_ranking(df_ranking)
