@@ -1,6 +1,4 @@
-# TP_Aplicado
-
-# CineMood 🎬
+# TP_Aplicado: CineMood 🎬
 
 ## Integrantes
 * Sofia Moreno Coppa Oliver
