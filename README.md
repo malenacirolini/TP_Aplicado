@@ -144,6 +144,7 @@ Se utilizó inteligencia artificial como herramienta de apoyo para consultas té
 ## Diagramas de diseño
 
 El diagrama de flujo del sistema se encuentra adjunto en el repositorio.
+* Ver archivo: diagrama_flujo.png
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Notas adicionales
