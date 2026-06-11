@@ -132,7 +132,7 @@ Se utilizó inteligencia artificial como herramienta de apoyo para consultas té
 * Uso de GitHub.
 * Generación y revisión de documentación.
 
-###Ejemplos de prompts utilizados:
+###Ejemplos de prompts utilizados:###
 
 * "¿Cómo obtener películas mejor valoradas usando la API de TMDB?"
 * "¿Cómo filtrar un DataFrame por género utilizando Pandas?"
