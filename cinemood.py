@@ -25,6 +25,7 @@ ESTADOS = {
     "triste_acompanar":  ["Drama", "Romance"],
     "estresado_cambiar": ["Comedy", "Adventure", "Comedia", "Aventura"],
     "estresado_acompanar":["Thriller", "Action", "Acción"],
+    "estresado_acompanar":["Thriller", "Action", "Acción","Drama"],
     "bien_emocionar":    ["Drama", "Science Fiction", "Ciencia ficción"],
     "bien_relajar":      ["Comedy", "Fantasy", "Comedia", "Fantasía"],
     "reflexivo":         ["Mystery", "Thriller", "Misterio"],
