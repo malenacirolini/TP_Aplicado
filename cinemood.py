@@ -10,6 +10,11 @@ Created on Wed Jun 10 13:50:36 2026
 CineMood - Recomendador de películas por estado emocional
 """
 
+import requests
+from io import BytesIO
+from PIL import Image
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import csv
@@ -141,29 +146,78 @@ def calcular_match(df_f, estado):
 # ──────────────────────────────────────────────────────────
 def mostrar_ranking(df_ranking):
     print("\n── Películas recomendadas para vos ──\n")
+
     for i, (_, fila) in enumerate(df_ranking.iterrows(), start=1):
         print(f"{i}. {fila['titulo']} ({fila['anio']})")
         print(f"   Géneros : {fila['generos']}")
+        print(f"   Rating  : {fila['rating']}")
         print(f"   Match   : {fila['match']}%")
+        print(f"   Sinopsis: {fila['sinopsis']}")
         print()
-
 
 # ──────────────────────────────────────────────────────────
 # PASO 8: Mostrar el gráfico de barras
 # ──────────────────────────────────────────────────────────
-def mostrar_grafico(df_ranking):
-    titulos = df_ranking["titulo"].tolist()[::-1]
-    matches = df_ranking["match"].tolist()[::-1]
+def cargar_poster(url):
+    try:
+        if pd.isna(url) or url == "Sin poster disponible":
+            return None
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.barh(titulos, matches, color="#2E4DA0")
+        respuesta = requests.get(url, timeout=5)
+        imagen = Image.open(BytesIO(respuesta.content))
+
+        return imagen
+
+    except Exception:
+        return None
+
+
+def mostrar_grafico(df_ranking):
+    df_plot = df_ranking.iloc[::-1].reset_index(drop=True)
+
+    titulos = df_plot["titulo"].tolist()
+    matches = df_plot["match"].tolist()
+    posters = df_plot["poster"].tolist()
+
+    fig, ax = plt.subplots(figsize=(12, 7))
+
+    posiciones = range(len(titulos))
+
+    ax.barh(posiciones, matches)
+    ax.set_yticks(posiciones)
+    ax.set_yticklabels(titulos)
     ax.set_xlabel("% de compatibilidad")
     ax.set_title("CineMood — Compatibilidad de películas recomendadas")
-    ax.set_xlim(0, 105)
+    ax.set_xlim(0, 115)
+
+    for i, poster_url in enumerate(posters):
+        imagen = cargar_poster(poster_url)
+
+        if imagen is not None:
+            imagebox = OffsetImage(imagen, zoom=0.12)
+            ab = AnnotationBbox(
+                imagebox,
+                (matches[i] + 5, i),
+                frameon=False
+            )
+            ax.add_artist(ab)
+
     plt.tight_layout()
     plt.show()
 
+def mostrar_grafico_rating(df_ranking):
+    df_plot = df_ranking.sort_values("rating", ascending=True)
 
+    titulos = df_plot["titulo"].tolist()
+    ratings = df_plot["rating"].tolist()
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(titulos, ratings)
+    plt.xlabel("Rating promedio TMDB")
+    plt.title("CineMood — Películas recomendadas rankeadas por rating")
+    plt.xlim(0, 10)
+    plt.tight_layout()
+    plt.show()
 # ──────────────────────────────────────────────────────────
 # PASO 9: Preguntar qué película eligió mirar
 # ──────────────────────────────────────────────────────────
@@ -250,7 +304,8 @@ def main():
             mostrar_colaborativo(estado, rango)
             mostrar_ranking(df_ranking)
             mostrar_grafico(df_ranking)
-
+            mostrar_grafico_rating(df_ranking)
+            
             elegida = pedir_eleccion(df_ranking)
             guardar_eleccion(elegida, estado, rango)
 
