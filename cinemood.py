@@ -21,19 +21,18 @@ ARCHIVO_HISTORIAL  = "historico_colaborativo.csv"
 
 # ── Qué géneros corresponden a cada estado emocional ──────
 ESTADOS = {
-    "triste_cambiar":    ["Comedy", "Animation", "Comedia", "Animación"],
-    "triste_acompanar":  ["Drama", "Romance"],
-    "estresado_cambiar": ["Comedy", "Adventure", "Comedia", "Aventura"],
-    "estresado_acompanar":["Thriller", "Action", "Acción","Drama"],
-    "bien_emocionar":    ["Drama", "Science Fiction", "Ciencia ficción"],
-    "bien_relajar":      ["Comedy", "Fantasy", "Comedia", "Fantasía"],
-    "reflexivo":         ["Mystery", "Thriller", "Misterio"],
+    "triste_cambiar":    ["Comedia", "Animación", "Familia"],
+    "triste_acompanar":  ["Drama", "Historia", "Romance"],
+    "estresado_cambiar": ["Comedia", "Acción", "Aventura"],
+    "estresado_acompanar":["Suspense","Terror" "Crimen", "Drama"],
+    "bien_emocionar":    ["Drama", "Ciencia ficción", "Bélica", "Acción"],
+    "bien_relajar":      ["Comedia", "Fantasía", "Familia"],
+    "reflexivo":         ["Mysterio", "Drama", "Western"],
 }
 
-
-# ──────────────────────────────────────────────────────────
-# PASO 1: Pedir un número válido al usuario
-# ──────────────────────────────────────────────────────────
+# ───────────────────────────────────────────────────────────────
+# PASO 1: Pedir un número válido al usuario (validación de datos)
+# ───────────────────────────────────────────────────────────────
 def pedir_numero(pregunta):
     while True:
         try:
