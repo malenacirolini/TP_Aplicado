@@ -101,7 +101,7 @@ def obtener_rango(p5):
     elif p5 <= 6:
         return 2000, 2015, "2000-2015"
     else:
-        return 2016, 2030, "reciente"
+        return 2016, 2026, "reciente"
 
 
 # ──────────────────────────────────────────────────────────
@@ -135,11 +135,13 @@ def calcular_match(df_f, estado):
 
     # 20% extra si la película tiene el género principal del estado emocional
     df_f["match"] += df_f["generos"].apply(
-        lambda g: 20 if generos[0].lower() in str(g).lower() else 0
-    )
+        lambda g: 20 if generos[0].lower() in str(g).lower() else 0)
 
     df_f["match"] = df_f["match"].round(1)
-    return df_f.sort_values("match", ascending=False).head(5)
+   
+    top50 = df_f.sort_values("match", ascending=False).head(50)
+    
+    return top50.sample(min(5, len(top50)))
 
 # ──────────────────────────────────────────────────────────
 # PASO 7: Mostrar el ranking en pantalla
@@ -296,8 +298,7 @@ def main():
         estado = inferir_estado(p1, p2, p3, p4)
         anio_desde, anio_hasta, rango = obtener_rango(p5)
 
-        print(f"\n  Estado inferido: {estado.replace('_', ' ')}")
-        print(f"  Rango de años  : {anio_desde}–{anio_hasta}\n")
+        print("\nAnalizamos tus respuestas y encontramos estas películas para vos:\n")
 
         # Filtrar y rankear
         df_filtrado = filtrar(df, estado, anio_desde, anio_hasta)
