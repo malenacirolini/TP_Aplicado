@@ -139,7 +139,7 @@ def calcular_match(df_f, estado):
     )
 
     df_f["match"] = df_f["match"].round(1)
-    return df_f.sort_values("match", ascending=False).head(10)
+    return df_f.sort_values("match", ascending=False).head(5)
 
 # ──────────────────────────────────────────────────────────
 # PASO 7: Mostrar el ranking en pantalla
@@ -194,12 +194,18 @@ def mostrar_grafico(df_ranking):
         imagen = cargar_poster(poster_url)
 
         if imagen is not None:
-            imagebox = OffsetImage(imagen, zoom=0.12)
+            imagebox = OffsetImage(imagen, zoom=0.06)
+            ab = AnnotationBbox(
+                    imagebox,
+                    (matches[i] + 3, i),
+                        frameon=False
+)
+            imagebox = OffsetImage(imagen, zoom=0.06)
             ab = AnnotationBbox(
                 imagebox,
                 (matches[i] + 5, i),
                 frameon=False
-            )
+                )
             ax.add_artist(ab)
 
     plt.tight_layout()
