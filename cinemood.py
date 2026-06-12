@@ -9,7 +9,7 @@ Created on Wed Jun 10 13:50:36 2026
 """
 CineMood - Recomendador de películas por estado emocional
 """
-
+import random
 import requests
 from io import BytesIO
 from PIL import Image
@@ -130,18 +130,52 @@ def calcular_match(df_f, estado):
     df_f = df_f.copy()
     generos = ESTADOS[estado]
 
-    # 80% del match viene del rating de TMDb
     df_f["match"] = (df_f["rating"] / 10 * 100) * 0.8
 
-    # 20% extra si la película tiene el género principal del estado emocional
     df_f["match"] += df_f["generos"].apply(
-        lambda g: 20 if generos[0].lower() in str(g).lower() else 0)
+        lambda g: 20 if any(gen.lower() in str(g).lower() for gen in generos) else 0
+    )
 
     df_f["match"] = df_f["match"].round(1)
-   
-    top50 = df_f.sort_values("match", ascending=False).head(50)
-    
-    return top50.sample(min(5, len(top50)))
+
+    return df_f
+
+def recomendar_hasta_elegir(df_coincidencias):
+    if df_coincidencias.empty:
+        print("No hay coincidencias para ese perfil.")
+        return None
+
+    disponibles = df_coincidencias.sample(frac=1).reset_index(drop=True)
+
+    primeras_opciones = disponibles.head(5)
+    restantes = disponibles.iloc[5:].reset_index(drop=True)
+
+    print("\n── Primeras 5 recomendaciones ──\n")
+    mostrar_ranking(primeras_opciones)
+    mostrar_grafico(primeras_opciones)
+
+    respuesta = input("¿Te interesa alguna de estas opciones? (s/n): ").strip().lower()
+
+    if respuesta == "s":
+        return pedir_eleccion(primeras_opciones)
+
+    indice = 0
+
+    while indice < len(restantes):
+        una_peli = restantes.iloc[[indice]]
+
+        print("\n── Nueva recomendación ──\n")
+        mostrar_ranking(una_peli)
+
+        respuesta = input("¿Te interesa esta película? (s/n): ").strip().lower()
+
+        if respuesta == "s":
+            return una_peli.iloc[0]["titulo"]
+
+        indice += 1
+
+    print("\nNo hay más coincidencias.")
+    return None
 
 # ──────────────────────────────────────────────────────────
 # PASO 7: Mostrar el ranking en pantalla
@@ -306,15 +340,14 @@ def main():
         if df_filtrado.empty:
             print("  No encontramos películas para ese perfil. Probá con otros valores.")
         else:
-            df_ranking = calcular_match(df_filtrado, estado)
+            df_coincidencias = calcular_match(df_filtrado, estado)
 
             mostrar_colaborativo(estado, rango)
-            mostrar_ranking(df_ranking)
-            mostrar_grafico(df_ranking)
-            mostrar_grafico_rating(df_ranking)
-            
-            elegida = pedir_eleccion(df_ranking)
-            guardar_eleccion(elegida, estado, rango)
+
+            elegida = recomendar_hasta_elegir(df_coincidencias)
+
+            if elegida is not None:
+                guardar_eleccion(elegida, estado, rango)
 
         # Nueva búsqueda
         if input("\n¿Otra búsqueda? (s/n): ").strip().lower() != "s":
