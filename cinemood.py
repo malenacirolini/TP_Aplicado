@@ -32,6 +32,7 @@ ESTADOS = {
     "estresado_acompanar":["Suspense","Terror" "Crimen", "Drama"],
     "bien_emocionar":    ["Drama", "Ciencia ficción", "Bélica", "Acción"],
     "bien_relajar":      ["Comedia", "Fantasía", "Familia"],
+    
     "reflexivo":         ["Mysterio", "Drama", "Western"],
 }
 
@@ -140,7 +141,46 @@ def calcular_match(df_f, estado):
 
     return df_f
 
+# nuevas funciones para el nuevo grafico por genero
+def contar_generos(df_peliculas):
+    conteo = {}
+
+    for generos in df_peliculas["generos"]:
+        lista_generos = str(generos).split(",")
+
+        for genero in lista_generos:
+            genero = genero.strip()
+
+            if genero:
+                conteo[genero] = conteo.get(genero, 0) + 1
+
+    return conteo
+
+
+def mostrar_grafico_generos(df_peliculas):
+    conteo = contar_generos(df_peliculas)
+
+    if len(conteo) == 0:
+        return
+
+    generos = list(conteo.keys())
+    cantidades = list(conteo.values())
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(generos, cantidades)
+    plt.xlabel("Cantidad de apariciones")
+    plt.title("CineMood — Distribución de géneros en las coincidencias")
+    plt.tight_layout()
+    plt.show()
+
+
 def recomendar_hasta_elegir(df_coincidencias):
+    cantidad_matches = len(df_coincidencias)
+
+    print(f"\nEncontramos {cantidad_matches} coincidencias para tu perfil.\n")
+
+    mostrar_grafico_generos(df_coincidencias)
+
     if df_coincidencias.empty:
         print("No hay coincidencias para ese perfil.")
         return None
@@ -344,9 +384,9 @@ def main():
             mostrar_colaborativo(estado, rango)
 
             elegida = recomendar_hasta_elegir(df_coincidencias)
-
+    
             if elegida is not None:
-                guardar_eleccion(elegida, estado, rango)
+                    guardar_eleccion(elegida, estado, rango)
 
         # Nueva búsqueda
         if input("\n¿Otra búsqueda? (s/n): ").strip().lower() != "s":
