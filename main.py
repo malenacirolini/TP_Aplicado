@@ -12,7 +12,6 @@ import pandas as pd
 from src.cuestionario import (
     hacer_cuestionario,
     inferir_estado,
-    obtener_rango
 )
 
 from src.recomendador import (
@@ -44,18 +43,17 @@ def main():
     while True:
         
         # Obtener respuestas del usuario
-        p1, p2, p3, p4, p5 = hacer_cuestionario()
+        p1, p2, p3, p4 = hacer_cuestionario()
 
         # Determinar perfil emocional
         estado = inferir_estado(p1, p2, p3, p4)
-
-        # Determinar rango temporal preferido
-        anio_desde, anio_hasta, rango = obtener_rango(p5)
-
+        
+        rango = "todas_las_decadas"
+        
         print("\nAnalizamos tus respuestas y encontramos estas películas para vos:\n")
  
         # Filtrar películas compatibles
-        df_filtrado = filtrar(df, estado, anio_desde, anio_hasta)
+        df_filtrado = filtrar(df, estado)
 
         if df_filtrado.empty:
             print("No encontramos películas para ese perfil.")

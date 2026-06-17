@@ -30,9 +30,8 @@ def hacer_cuestionario():
     p2 = pedir_numero("¿Qué tan estresado/a estás? (1=nada, 10=muchísimo): ")
     p3 = pedir_numero("¿Querés cambiar tu estado? (1=no, quiero que me acompañe, 10=sí, quiero cambiarlo): ")
     p4 = pedir_numero("¿Qué tan involucrado/a querés estar? (1=algo liviano, 10=que me absorba): ")
-    p5 = pedir_numero("¿De qué época? (1=clásicos, 10=muy reciente): ")
 
-    return p1, p2, p3, p4, p5
+    return p1, p2, p3, p4
 
 
 # ──────────────────────────────────────────────────────────
@@ -66,13 +65,7 @@ def inferir_estado(p1, p2, p3, p4):
 # ──────────────────────────────────────────────────────────
 # CLASIFICACIÓN POR RANGO TEMPORAL
 # ──────────────────────────────────────────────────────────
-def obtener_rango(p5):
-    if p5 <= 3:
-        return 1900, 1999, "clasico"
-    elif p5 <= 6:
-        return 2000, 2015, "2000-2015"
-    else:
-        return 2016, 2026, "reciente"
+
 
 
 

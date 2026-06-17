@@ -41,13 +41,24 @@ def mostrar_grafico_generos(df_peliculas):
     if len(conteo) == 0:
         return
 
-    generos = list(conteo.keys())
-    cantidades = list(conteo.values())
+    conteo_ordenado = dict(
+        sorted(conteo.items(), key=lambda item: item[1], reverse=True)
+    )
+
+    generos = list(conteo_ordenado.keys())
+    cantidades = list(conteo_ordenado.values())
+
+    generos = generos[::-1]
+    cantidades = cantidades[::-1]
 
     plt.figure(figsize=(10, 6))
     plt.barh(generos, cantidades)
-    plt.xlabel("Cantidad de apariciones")
-    plt.title("CineMood — Distribución de géneros en las coincidencias")
+    plt.xlabel("Cantidad de coincidencias")
+    plt.title("CineMood — Géneros más presentes en tus coincidencias")
+
+    for i, cantidad in enumerate(cantidades):
+        plt.text(cantidad + 0.2, i, str(cantidad), va="center")
+
     plt.tight_layout()
     plt.show()
 
@@ -140,5 +151,30 @@ def mostrar_grafico_rating(df_ranking):
     plt.xlabel("Rating promedio TMDB")
     plt.title("CineMood — Películas recomendadas rankeadas por rating")
     plt.xlim(0, 10)
+    plt.tight_layout()
+    plt.show()
+    
+    
+# grafico decadas
+
+def mostrar_grafico_decadas(df_peliculas):
+    df_plot = df_peliculas.copy()
+
+    df_plot["anio"] = pd.to_numeric(df_plot["anio"], errors="coerce")
+    df_plot = df_plot.dropna(subset=["anio"])
+
+    df_plot["decada"] = (df_plot["anio"] // 10 * 10).astype(int).astype(str) + "s"
+
+    conteo_decadas = df_plot["decada"].value_counts().sort_index()
+
+    if conteo_decadas.empty:
+        return
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(conteo_decadas.index, conteo_decadas.values)
+    plt.xlabel("Década")
+    plt.ylabel("Cantidad de coincidencias")
+    plt.title("CineMood — Distribución de coincidencias por década")
+    plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()

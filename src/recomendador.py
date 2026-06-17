@@ -10,7 +10,8 @@ import pandas as pd
 from src.graficos import (
     mostrar_ranking,
     mostrar_grafico,
-    mostrar_grafico_generos
+    mostrar_grafico_generos,
+    mostrar_grafico_decadas
 )
 
 # ──────────────────────────────────────────────────────────
@@ -33,15 +34,11 @@ ESTADOS = {
 # FILTRADO DE PELÍCULAS
 # ──────────────────────────────────────────────────────────
 
-def filtrar(df, estado, anio_desde, anio_hasta):
+def filtrar(df, estado):
     generos = ESTADOS[estado]
 
-    # Filtrar por rango de años
-    df_f = df[pd.to_numeric(df["anio"], errors="coerce").between(anio_desde, anio_hasta)].copy()
-
-    # Filtrar por género
-    df_f = df_f[
-        df_f["generos"].apply(
+    df_f = df[
+        df["generos"].apply(
             lambda g: any(gen.lower() in str(g).lower() for gen in generos)
         )
     ].copy()
@@ -70,18 +67,28 @@ def calcular_match(df_f, estado):
 # ──────────────────────────────────────────────────────────
 # PROCESO DE RECOMENDACIÓN
 # ──────────────────────────────────────────────────────────
+def pedir_si_no(pregunta):
+    while True:
+        respuesta = input(pregunta).strip().lower()
+
+        if respuesta in ["s", "n"]:
+            return respuesta
+
+        print("  Ingresá 's' para sí o 'n' para no.")
+
 
 def recomendar_hasta_elegir(df_coincidencias):
     cantidad_matches = len(df_coincidencias)
 
     print(f"\nEncontramos {cantidad_matches} coincidencias para tu perfil.\n")
 
-    mostrar_grafico_generos(df_coincidencias)
-
     if df_coincidencias.empty:
         print("No hay coincidencias para ese perfil.")
         return None
 
+    mostrar_grafico_generos(df_coincidencias)
+    mostrar_grafico_decadas(df_coincidencias)
+    
     disponibles = df_coincidencias.sample(frac=1).reset_index(drop=True)
 
     primeras_opciones = disponibles.head(5)
@@ -90,8 +97,9 @@ def recomendar_hasta_elegir(df_coincidencias):
     print("\n── Primeras 5 recomendaciones ──\n")
     mostrar_ranking(primeras_opciones)
     mostrar_grafico(primeras_opciones)
+    
 
-    respuesta = input("¿Te interesa alguna de estas opciones? (s/n): ").strip().lower()
+    respuesta = pedir_si_no("¿Te interesa alguna de estas opciones? (s/n): ")
 
     if respuesta == "s":
         return pedir_eleccion(primeras_opciones)
@@ -99,12 +107,18 @@ def recomendar_hasta_elegir(df_coincidencias):
     indice = 0
 
     while indice < len(restantes):
+        quiere_otra = pedir_si_no("\n¿Querés que te tire otra coincidencia? (s/n): ")
+
+        if quiere_otra == "n":
+            print("\nBúsqueda finalizada.")
+            return None
+
         una_peli = restantes.iloc[[indice]]
 
         print("\n── Nueva recomendación ──\n")
         mostrar_ranking(una_peli)
 
-        respuesta = input("¿Te interesa esta película? (s/n): ").strip().lower()
+        respuesta = pedir_si_no("¿Te interesa esta película? (s/n): ")
 
         if respuesta == "s":
             return una_peli.iloc[0]["titulo"]
@@ -113,7 +127,6 @@ def recomendar_hasta_elegir(df_coincidencias):
 
     print("\nNo hay más coincidencias.")
     return None
-
 
 # ──────────────────────────────────────────────────────────
 #  SELECCIÓN DE PELÍCULA
