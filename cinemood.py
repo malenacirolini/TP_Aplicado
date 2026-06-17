@@ -333,7 +333,6 @@ def main():
         anio_desde, anio_hasta, rango = obtener_rango(p5)
 
         print("\nAnalizamos tus respuestas y encontramos estas películas para vos:\n")
-
         # Filtrar y rankear
         df_filtrado = filtrar(df, estado, anio_desde, anio_hasta)
 
