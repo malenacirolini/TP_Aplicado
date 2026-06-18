@@ -176,6 +176,7 @@ Algunos de los prompts más relevantes utilizados fueron:
 * Consultas para ajustar gráficos, corregir errores y organizar el proyecto en módulos en github.
 
 Todo el código fue revisado, comprendido y adaptado por los integrantes del grupo.
+
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Notas adicionales
 
