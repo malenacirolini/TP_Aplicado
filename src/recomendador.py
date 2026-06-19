@@ -13,6 +13,7 @@ from src.graficos import (
     mostrar_grafico_generos,
     mostrar_grafico_decadas
 )
+#Cuando queremos que muestre gráficos o rankings lo delega a gráficos.py
 
 # ──────────────────────────────────────────────────────────
 # CONFIGURACIÓN DE PERFILES EMOCIONALES
@@ -25,32 +26,31 @@ ESTADOS = {
     "estresado_acompanar":["Suspense","Terror", "Crimen", "Drama"],
     "bien_emocionar":    ["Drama", "Ciencia ficción", "Bélica", "Acción"],
     "bien_relajar":      ["Comedia", "Fantasía", "Familia"],
-    
     "reflexivo":         ["Mysterio", "Drama", "Western"],
 }
-
 
 # ──────────────────────────────────────────────────────────
 # FILTRADO DE PELÍCULAS
 # ──────────────────────────────────────────────────────────
 
-def filtrar(df, estado):
+def filtrar(df, estado):             # Recibe df que tiene las 2000 peliculas
     generos = ESTADOS[estado]
-
+    
     df_f = df[
-        df["generos"].apply(
+        df["generos"].apply(         # Recorre todas las películas
             lambda g: any(gen.lower() in str(g).lower() for gen in generos)
         )
     ].copy()
 
     return df_f
-
+    #devuelve un dataframe mas chico
 
 # ──────────────────────────────────────────────────────────
 # CÁLCULO DEL PORCENTAJE DE COMPATIBILIDAD
 # ──────────────────────────────────────────────────────────
-def calcular_match(df_f, estado):
-    df_f = df_f.copy()
+
+def calcular_match(df_f, estado):    # Recibe las películas filtradas
+    df_f = df_f.copy()               # Hace una copia para no modificar el df original
     generos = ESTADOS[estado]
 
     df_f["match"] = (df_f["rating"] / 10 * 100) * 0.8
@@ -67,7 +67,8 @@ def calcular_match(df_f, estado):
 # ──────────────────────────────────────────────────────────
 # PROCESO DE RECOMENDACIÓN
 # ──────────────────────────────────────────────────────────
-def pedir_si_no(pregunta):
+
+def pedir_si_no(pregunta):    # Valida, solo acepta s o n
     while True:
         respuesta = input(pregunta).strip().lower()
 
@@ -78,7 +79,7 @@ def pedir_si_no(pregunta):
 
 
 def recomendar_hasta_elegir(df_coincidencias):
-    cantidad_matches = len(df_coincidencias)
+    cantidad_matches = len(df_coincidencias)  # Cuenta cuantas peliculas encontro
 
     print(f"\nEncontramos {cantidad_matches} coincidencias para tu perfil.\n")
 
@@ -89,15 +90,14 @@ def recomendar_hasta_elegir(df_coincidencias):
     mostrar_grafico_generos(df_coincidencias)
     mostrar_grafico_decadas(df_coincidencias)
     
-    disponibles = df_coincidencias.sample(frac=1).reset_index(drop=True)
+    disponibles = df_coincidencias.sample(frac=1).reset_index(drop=True) #mezcla las filas
 
-    primeras_opciones = disponibles.head(5)
-    restantes = disponibles.iloc[5:].reset_index(drop=True)
+    primeras_opciones = disponibles.head(5)    # Toma las primeras 5 recomendaciones
+    restantes = disponibles.iloc[5:].reset_index(drop=True) # Guarda las demas
 
     print("\n── Primeras 5 recomendaciones ──\n")
     mostrar_ranking(primeras_opciones)
     mostrar_grafico(primeras_opciones)
-    
 
     respuesta = pedir_si_no("¿Te interesa alguna de estas opciones? (s/n): ")
 
@@ -132,7 +132,7 @@ def recomendar_hasta_elegir(df_coincidencias):
 #  SELECCIÓN DE PELÍCULA
 # ──────────────────────────────────────────────────────────
 
-def pedir_eleccion(df_ranking):
+def pedir_eleccion(df_ranking):    # Recibe las 5 peliculas
     titulos = df_ranking["titulo"].tolist()
     print("¿Cuál vas a mirar? Ingresá el número:")
     for i, t in enumerate(titulos, start=1):
