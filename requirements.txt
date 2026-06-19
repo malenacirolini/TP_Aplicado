@@ -1,11 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 11 17:22:51 2026
-
-@author: sofi
-"""
 
 pandas
 requests
 matplotlib
+pillow
