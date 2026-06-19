@@ -31,20 +31,53 @@ ESTADOS = {
 
 # ──────────────────────────────────────────────────────────
 # FILTRADO DE PELÍCULAS
-# ──────────────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────0]
+def filtrar(df, estado, duracion_elegida, genero_evitar):
+    generos_estado = ESTADOS[estado]
 
-def filtrar(df, estado):             # Recibe df que tiene las 2000 peliculas
-    generos = ESTADOS[estado]
-    
-    df_f = df[
-        df["generos"].apply(         # Recorre todas las películas
-            lambda g: any(gen.lower() in str(g).lower() for gen in generos)
+    df_f = df.copy()
+
+    df_f["duracion"] = pd.to_numeric(
+        df_f["duracion"],
+        errors="coerce"
+    )
+
+    df_f = df_f.dropna(subset=["duracion"])
+
+    # Filtrar por géneros compatibles con el perfil.
+    df_f = df_f[
+        df_f["generos"].apply(
+            lambda generos_pelicula: any(
+                genero.lower() in str(generos_pelicula).lower()
+                for genero in generos_estado
+            )
         )
     ].copy()
 
-    return df_f
-    #devuelve un dataframe mas chico
+    # Filtrar por duración.
+    if duracion_elegida == 1:
+        df_f = df_f[df_f["duracion"] <= 90]
 
+    elif duracion_elegida == 2:
+        df_f = df_f[
+            df_f["duracion"].between(91, 120)
+        ]
+
+    elif duracion_elegida == 3:
+        df_f = df_f[df_f["duracion"] > 120]
+
+    # Excluir el género que no quiere ver.
+    if genero_evitar is not None:
+        df_f = df_f[
+            ~df_f["generos"].str.contains(
+                genero_evitar,
+                case=False,
+                na=False,
+                regex=False
+            )
+        ].copy()
+
+    return df_f
 # ──────────────────────────────────────────────────────────
 # CÁLCULO DEL PORCENTAJE DE COMPATIBILIDAD
 # ──────────────────────────────────────────────────────────
