@@ -136,25 +136,7 @@ def mostrar_grafico(df_ranking):
     plt.tight_layout()
     plt.show()
     
-# ──────────────────────────────────────────────────────────
-# GRÁFICO DE RATINGS
-# ──────────────────────────────────────────────────────────
 
-def mostrar_grafico_rating(df_ranking):
-    df_plot = df_ranking.sort_values("rating", ascending=True)
-
-    titulos = df_plot["titulo"].tolist()
-    ratings = df_plot["rating"].tolist()
-
-    plt.figure(figsize=(10, 6))
-    plt.barh(titulos, ratings)
-    plt.xlabel("Rating promedio TMDB")
-    plt.title("CineMood — Películas recomendadas rankeadas por rating")
-    plt.xlim(0, 10)
-    plt.tight_layout()
-    plt.show()
-    
-    
 # grafico decadas
 
 def mostrar_grafico_decadas(df_peliculas):
