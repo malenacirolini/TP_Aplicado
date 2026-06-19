@@ -84,6 +84,8 @@ A partir de las respuestas:
 * Desarrollo de los gráficos y visualizaciones.
 * Implementación de la carga y visualización de posters.
 
+Aclaración: No seguimos un orden dividido tan especifico, sino que fuimos trabajando paralelamente y en conjunto sobre el trabajo en las clases de la materia.
+
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Fuente de datos
 
@@ -165,7 +167,7 @@ El diagrama se encuentra adjunto en el repositorio como: diagrama_flujo.png.
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Uso de Inteligencia Artificial
 
-Durante el desarrollo del proyecto se utilizó ChatGPT como herramienta de apoyo para comprender el funcionamiento de la API de TMDB, organizar el código, mejorar funcionalidades y redactar documentación.
+Durante el desarrollo del proyecto se utilizó ChatGPT y Claude como herramienta de apoyo para comprender el funcionamiento de la API de TMDB, organizar el código, mejorar funcionalidades y redactar documentación.
 
 Algunos de los prompts más relevantes utilizados fueron:
 
@@ -173,7 +175,7 @@ Algunos de los prompts más relevantes utilizados fueron:
 * "A partir de los datos obtenidos de la API, generá un DataFrame. Tiene que acotarse a 2000 películas y deben ser las más populares. El DataFrame debe contener las columnas: título, título original, año, géneros, duración, sinopsis, rating y URL del poster."
 * "Necesito que CineMood además devuelva la sinopsis de cada película que recomienda."
 * "Como hago para que en los gráficos aparezca el poster de cada película y que genere un gráfico adicional que rankee las películas recomendadas por rating."
-* Consultas para ajustar gráficos, corregir errores y organizar el proyecto en módulos en github.
+* Consultas para ajustar gráficos, corregir errores y organizar el proyecto en módulos en python y en github.
 
 Todo el código fue revisado, comprendido y adaptado por los integrantes del grupo.
 
