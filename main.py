@@ -49,7 +49,7 @@ def main():
     while True:
         
         # Obtener respuestas del usuario
-        p1, p2, p3, p4 = hacer_cuestionario()
+        (p1, p2, p3, p4, duracion_elegida,genero_evitar) =  hacer_cuestionario()
 
         # Determinar perfil emocional, transforma numeros en una categoria
         estado = inferir_estado(p1, p2, p3, p4)
@@ -59,7 +59,7 @@ def main():
         print("\nAnalizamos tus respuestas y encontramos estas películas para vos:\n")
  
         # recibe el dataframe y el estado emocional y filtra películas compatibles
-        df_filtrado = filtrar(df, estado)
+        df_filtrado = filtrar(df, estado, duracion_elegida, genero_evitar)
 
         #evita recomendar peliculas si no hay compatibles
         if df_filtrado.empty:
