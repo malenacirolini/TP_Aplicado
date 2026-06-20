@@ -13,7 +13,7 @@ CineMood es un sistema de recomendación de películas basado en estados emocion
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Descripción general del funcionamiento
 
-El programa realiza un cuestionario compuesto por cuatro preguntas emocionales y dos preferencias adicionales (duración deseada y género a evitar).A partir de las respuestas:
+El programa realiza un cuestionario compuesto por cuatro preguntas emocionales y dos preferencias adicionales (duración deseada y género a evitar). A partir de las respuestas:
 
 1. Se infiere el perfil emocional del usuario.
 2. Se filtra un dataset de aproximadamente 2000 películas obtenido desde la API de TMDB.
@@ -29,7 +29,7 @@ El programa realiza un cuestionario compuesto por cuatro preguntas emocionales y
 
 ### cuestionario.py
 * pedir_numero(): valida que el usuario ingrese un número entre 1 y 10.
-* pedir_duracion(): valida que el usuario ingrese un número entre 1 y 10.
+* pedir_duracion(): permite seleccionar la duración deseada de la película.
 * pedir_genero_evitar(): permite indicar un género que el usuario no quiere ver.
 * hacer_cuestionario(): realiza el cuestionario emocional interactivo.
 * inferir_estado(): determina el perfil emocional del usuario a partir de sus respuestas.
@@ -151,7 +151,6 @@ El proyecto se encuentra organizado de la siguiente manera:
 ### Archivos adicionales
 * requirements.txt: contiene las dependencias necesarias para ejecutar el proyecto.
 * README.md: documentación general del trabajo.
-Estructura del repositorio
 
 ------------------------------------------------------------------------------------------------
 ## Resultados y salidas
