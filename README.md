@@ -13,27 +13,29 @@ CineMood es un sistema de recomendación de películas basado en estados emocion
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Descripción general del funcionamiento
 
-El programa realiza un cuestionario compuesto por cuatro preguntas relacionadas con el estado emocional del usuario.
-A partir de las respuestas:
+El programa realiza un cuestionario compuesto por cuatro preguntas emocionales y dos preferencias adicionales (duración deseada y género a evitar).A partir de las respuestas:
 
-1. Se infiere un estado emocional.
+1. Se infiere el perfil emocional del usuario.
 2. Se filtra un dataset de aproximadamente 2000 películas obtenido desde la API de TMDB.
-3. Se calcula un porcentaje de compatibilidad para cada película.
-4. Se genera un ranking personalizado.
-5. Se muestran gráficos de análisis.
-6. Se registra la película elegida por el usuario.
-7. Se muestran recomendaciones colaborativas basadas en elecciones previas.
+3. Se calcula un porcentaje de compatibilidad para cada película utilizando su rating y la coincidencia de géneros con el perfil emocional.
+4. Se muestran recomendaciones colaborativas basadas en elecciones previas de usuarios con perfiles similares.
+5. Se genera un ranking personalizado de películas recomendadas.
+6. Se muestran gráficos con información sobre compatibilidad, géneros y décadas.
+7. El usuario selecciona una película o continúa explorando recomendaciones.
+8. La elección realizada se registra en un archivo CSV para futuras recomendaciones colaborativas.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Funciones principales
 
 ### cuestionario.py
 * pedir_numero(): valida que el usuario ingrese un número entre 1 y 10.
+* pedir_duracion(): valida que el usuario ingrese un número entre 1 y 10.
+* pedir_genero_evitar(): permite indicar un género que el usuario no quiere ver.
 * hacer_cuestionario(): realiza el cuestionario emocional interactivo.
 * inferir_estado(): determina el perfil emocional del usuario a partir de sus respuestas.
 
 ### recomendador.py
-* filtrar(): selecciona las películas compatibles con el perfil emocional.
+* filtrar(): filtra las películas según el perfil emocional, la duración elegida y el género a evitar.
 * calcular_match(): calcula el porcentaje de compatibilidad de cada película.
 * pedir_si_no(): valida respuestas de tipo sí/no.
 * recomendar_hasta_elegir(): muestra recomendaciones hasta que el usuario elija una película.
@@ -48,12 +50,12 @@ A partir de las respuestas:
 * mostrar_grafico_generos(): genera un gráfico de géneros más frecuentes.
 * cargar_poster(): descarga y carga posters desde TMDB.
 * mostrar_grafico(): genera un gráfico de compatibilidad con posters de películas.
-* mostrar_grafico_rating(): muestra las películas ordenadas por rating.
-* mostrar_grafico_decadas(): visualiza la distribución de coincidencias por década.
+* mostrar_ranking(): muestra el ranking de películas recomendadas con sus datos principales.
+* mostrar_grafico_decadas(): muestra la distribución de coincidencias por década.
 
 ### df_api.py
 * pedir_datos(): realiza consultas a la API de TMDB.
-* obtener_ids_top_rated(): obtiene los identificadores de las películas mejor valoradas.
+* obtener_ids_top_rated(): obtiene los IDs de las películas mejor valoradas.
 * obtener_detalle_pelicula(): recupera la información detallada de una película.
 * crear_dataframe_top_rated(): construye el dataset utilizado por el sistema.
 * main(): genera y exporta el dataset completo a formato CSV.
@@ -142,17 +144,23 @@ El proyecto se encuentra organizado de la siguiente manera:
 * peliculas_top_rated_tmdb.csv: dataset principal utilizado para las recomendaciones.
 * historico_colaborativo.csv: archivo donde se almacenan las elecciones realizadas por los usuarios.
 
+### Carpeta `docs/`
+* Diagramas de flujo utilizados para documentar el diseño del sistema.
+* Consigna original del trabajo práctico.
+
 ### Archivos adicionales
 * requirements.txt: contiene las dependencias necesarias para ejecutar el proyecto.
 * README.md: documentación general del trabajo.
+Estructura del repositorio
 
-------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------
 ## Resultados y salidas
 
 Entre las principales salidas del programa se encuentran:
 * Ranking personalizado de películas recomendadas.
 * Porcentaje de compatibilidad para cada película.
-* Gráfico de compatibilidad entre las películas recomendadas.
+* Visualización de sinopsis de las películas recomendadas.
+* Gráfico de compatibilidad con posters de las películas.
 * Gráfico de géneros más frecuentes dentro de las coincidencias encontradas.
 * Gráfico de distribución de coincidencias por década.
 * Recomendaciones colaborativas basadas en usuarios con perfiles similares.
@@ -162,7 +170,7 @@ Entre las principales salidas del programa se encuentran:
 ## Diagramas de diseño
 
 Se realizó un diagrama de flujo para representar el funcionamiento general del sistema y la interacción entre sus principales módulos.
-El diagrama se encuentra adjunto en el repositorio como: diagrama_flujo.png.
+Los diagramas se encuentran disponibles dentro de la carpeta docs/.
 
 ------------------------------------------------------------------------------------------------------------------------------------------------
 ## Uso de Inteligencia Artificial
@@ -172,7 +180,7 @@ Durante el desarrollo del proyecto se utilizó ChatGPT y Claude como herramienta
 Algunos de los prompts más relevantes utilizados fueron:
 
 * "Generá un código para visualizar qué información recibimos de la API."
-* "A partir de los datos obtenidos de la API, generá un DataFrame. Tiene que acotarse a 2000 películas y deben ser las más populares. El DataFrame debe contener las columnas: título, título original, año, géneros, duración, sinopsis, rating y URL del poster."
+* "A partir de los datos obtenidos de la API, generá un DataFrame. Tiene que acotarse a 2000 películas y deben ser las mejor valoradas. El DataFrame debe contener las columnas: título, título original, año, géneros, duración, sinopsis, rating y URL del poster."
 * "Necesito que CineMood además devuelva la sinopsis de cada película que recomienda."
 * "Como hago para que en los gráficos aparezca el poster de cada película y que genere un gráfico adicional que rankee las películas recomendadas por rating."
 * Consultas para ajustar gráficos, corregir errores y organizar el proyecto en módulos en python y en github.
@@ -186,3 +194,5 @@ Todo el código fue revisado, comprendido y adaptado por los integrantes del gru
 * No es necesario realizar consultas a la API de TMDB para utilizar el sistema, ya que el dataset principal se encuentra previamente generado.
 * En caso de querer generar nuevamente el dataset, puede ejecutarse el archivo `df_api.py`.
 * Se recomienda instalar previamente todas las dependencias incluidas en `requirements.txt`.
+
+
